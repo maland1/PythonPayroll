@@ -45,24 +45,30 @@ def getEmployeeDetails():
             except ValueError:
                 print("Input invalid, please enter a valid number.")
 
+        # simple calcs for gross pay
+        def grossCalcs(x, y):
+            gross = x * y
+            return  gross
 
-        # simple calcs for gross pay and tax
-        grossPay = hoursWorked * rateOfPay
-        taxPaid = grossPay * rateOfTax
+        # simple tax calcs
+        def taxCalcs(x, y):
+            tax = x * y
+            return tax
 
-        # checking bonus amount
-        def bonusCheck(x):
-            if x > 50:
-                bonus = 100
-                return bonus
-            elif x > 45:
-                bonus = 60
-                return bonus
-            elif x > 40:
-                bonus = 50
-                return bonus
+        # simple bonus calcs
+        def bonusCheck(hours):
+            if hours > 50:
+                return 100
+            elif hours > 45:
+                return 60
+            elif hours > 40:
+                return 50
 
-        netPay = (grossPay - taxPaid) + bonus
+
+        # simple net pay calcs
+        def netCalcs(x, y, z):
+            net = (x - y) + z
+            return net
 
         def printWages(x):
             print("Employee num: \t{}".format(i + 1))
@@ -79,11 +85,11 @@ def getEmployeeDetails():
 def validString(x):
     while True:
         try:
-
-            if x == "":
+            val = str(input(x))
+            if val == "":
                 raise Exception
             else:
-                return x
+                return val
         except:
             print("Invalid entry, please enter a valid string.")
 
