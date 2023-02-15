@@ -1,46 +1,8 @@
+# Wage Calculator App
+# importing functions
+import functions as fnc
 # Numerical variables
 rateOfTax = 0.15
-
-
-def startMSG():
-    print("\nWelcome to SI Payroll Software!")
-
-
-def endMSG():
-    print("\nThank you for using SI Payroll, have a nice day!")
-
-
-def validString(userInput):
-    while True:
-        try:
-            if userInput != "":
-                return userInput
-            else:
-                raise Exception
-        except:
-            print("Invalid entry, please enter a valid string.")
-
-
-def validInt(userInput):
-    while True:
-        try:
-            if int(userInput) < 1:
-                raise Exception
-            else:
-                return int(userInput)
-        except:
-            print("Invalid entry, please provide a valid integer.")
-
-
-def validFloat(userInput):
-    while True:
-        try:
-            if float(userInput) < 1:
-                raise Exception
-            else:
-                return float(userInput)
-        except:
-            print("Invalid entry, please provide a valid float.")
 
 
 # simple bonus calcs
@@ -70,6 +32,7 @@ def netCalcs(gross, tax, bonus):
     return (gross - tax) + bonus
 
 
+# prints the values to console
 def printWages(value):
     print("\nEmployee name: \t{}".format(value[0]))
     print("Hours worked: \t{}".format(value[1]))
@@ -81,19 +44,21 @@ def printWages(value):
     print("Net Pay: \t\t{:.2f}".format(value[6]))
 
 
-# prints opening message
-startMSG()
+# calls the opening message function
+fnc.startMSG()
 
+# setting up list for print function
+detailList = []
 for i in range(5):  # loops through 5 times
-    # list includes every variable
-    detailList = []
+
+    del detailList[:]  # clearing the list at the start of each loop
 
     print(f"\nEmployee {i + 1}")
 
     # getting inputs for name, hours and pay rate
-    detailList.append(validString(input("Enter Employee Name: ")))
-    detailList.append(validInt(input("Enter Hours Worked: ")))
-    detailList.append(validFloat(input("Enter Rate of Pay: ")))
+    detailList.append(fnc.validString(input("Enter Employee Name: ")))
+    detailList.append(fnc.validInt(input("Enter Hours Worked: ")))
+    detailList.append(fnc.validFloat(input("Enter Rate of Pay: ")))
 
     detailList.append(bonusCheck(detailList[1]))
     detailList.append(grossCalcs(detailList[2], detailList[1]))
@@ -103,5 +68,5 @@ for i in range(5):  # loops through 5 times
     # passing the list to the print function
     printWages(detailList)
 
-# prints closing message
-endMSG()
+# calls the closing message function
+fnc.endMSG()

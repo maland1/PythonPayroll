@@ -1,4 +1,14 @@
+# function to print generic welcome message
+def startMSG():
+    print("\nWelcome to Soft Ireland software package.")
 
+
+# function to print generic closing message
+def endMSG():
+    print("\nThank you for using Soft Ireland!")
+
+
+# function to validate strings
 def validString(userInput):
     while True:
         try:
@@ -10,6 +20,7 @@ def validString(userInput):
             print("Invalid entry, please enter a valid string.")
 
 
+# function to validate integers
 def validInt(userInput):
     while True:
         try:
@@ -21,6 +32,7 @@ def validInt(userInput):
             print("Invalid entry, please provide a valid integer.")
 
 
+# function to validate floats
 def validFloat(userInput):
     while True:
         try:
