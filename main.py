@@ -1,122 +1,107 @@
-# String variables
-empName = ""
-
 # Numerical variables
-hoursWorked = 0
-rateOfPay = 0.00
 rateOfTax = 0.15
-taxPaid = 0.00
-grossPay = 0.00
-netPay = 0.00
-bonus = 0
 
 
-# getting user inputted data
-def getEmployeeDetails():
-    for i in range(5):
-        # loops through 5 times
-        while True:
-            empName = str(input("\nEnter employee name: "))
-            if len(empName) >= 3 and empName.isalpha():
-                break
-            print("Input invalid, please enter a name with at least 3 characters and consisting only of letters.")
-
-        # Will ask for hours until valid answer is given
-        while True:
-            try:
-                hoursWorked = int(input("Enter hours worked: "))
-
-                if hoursWorked > 0:
-                    break
-                print("Input invalid, please enter a non-negative number.")
-
-            except ValueError:
-                print("Input invalid, please enter a valid number.")
-
-        # Will ask for pay rate until valid answer is given
-        while True:
-            try:
-                rateOfPay = float(input("Enter hourly pay rate: "))
-
-                if rateOfPay > 0:
-                    break
-                print("Input invalid, please enter a non-negative number.")
-
-            except ValueError:
-                print("Input invalid, please enter a valid number.")
-
-        # simple calcs for gross pay
-        def grossCalcs(x, y):
-            gross = x * y
-            return  gross
-
-        # simple tax calcs
-        def taxCalcs(x, y):
-            tax = x * y
-            return tax
-
-        # simple bonus calcs
-        def bonusCheck(hours):
-            if hours > 50:
-                return 100
-            elif hours > 45:
-                return 60
-            elif hours > 40:
-                return 50
+def startMSG():
+    print("\nWelcome to SI Payroll Software!")
 
 
-        # simple net pay calcs
-        def netCalcs(x, y, z):
-            net = (x - y) + z
-            return net
-
-        def printWages(x):
-            print("Employee num: \t{}".format(i + 1))
-            print("Employee name: \t{}".format(x))
-            print("Hours worked: \t{}".format(hoursWorked))
-            print("Rate of Pay: \t{:.2f}".format(rateOfPay))
-            print("Rate of Tax: \t{:.0%}".format(rateOfTax))
-            print("Gross Pay: \t\t{:.2f}".format(grossPay))
-            print("Tax Paid: \t\t{:.2f}".format(taxPaid))
-            print("Bonus: \t\t\t{}".format(bonus))
-            print("Net Pay: \t\t{:.2f}".format(netPay))
+def endMSG():
+    print("\nThank you for using SI Payroll, have a nice day!")
 
 
-def validString(x):
+def validString(userInput):
     while True:
         try:
-            val = str(input(x))
-            if val == "":
-                raise Exception
+            if userInput != "":
+                return userInput
             else:
-                return val
+                raise Exception
         except:
             print("Invalid entry, please enter a valid string.")
 
 
-def validInt():
+def validInt(userInput):
     while True:
         try:
-            val = int(input(x))
-            if val < 1:
+            if int(userInput) < 1:
                 raise Exception
             else:
-                return val
+                return int(userInput)
         except:
             print("Invalid entry, please provide a valid integer.")
 
 
-def validFloat(x):
+def validFloat(userInput):
     while True:
         try:
-            val = float(input(x))
-            if val < 1:
+            if float(userInput) < 1:
                 raise Exception
             else:
-                return val
+                return float(userInput)
         except:
             print("Invalid entry, please provide a valid float.")
 
 
-# Calling all the functions with the respective input values
-getEmployeeDetails()
+# simple bonus calcs
+def bonusCheck(hours):
+    if hours > 50:
+        return 100
+    elif hours > 45:
+        return 60
+    elif hours > 40:
+        return 50
+    else:
+        return 0
+
+
+# simple calcs for gross pay
+def grossCalcs(payRate, hours):
+    return payRate * hours
+
+
+# simple tax calcs
+def taxCalcs(gross, taxRate):
+    return gross * taxRate
+
+
+# simple net pay calcs
+def netCalcs(gross, tax, bonus):
+    return (gross - tax) + bonus
+
+
+def printWages(value):
+    print("\nEmployee name: \t{}".format(value[0]))
+    print("Hours worked: \t{}".format(value[1]))
+    print("Rate of Pay: \t{:.2f}".format(value[2]))
+    print("Rate of Tax: \t{:.0%}".format(rateOfTax))
+    print("Gross Pay: \t\t{:.2f}".format(value[4]))
+    print("Tax Paid: \t\t{:.2f}".format(value[5]))
+    print("Bonus: \t\t\t{}".format(value[3]))
+    print("Net Pay: \t\t{:.2f}".format(value[6]))
+
+
+# prints opening message
+startMSG()
+
+for i in range(5):  # loops through 5 times
+    # list includes every variable
+    detailList = []
+
+    print(f"\nEmployee {i + 1}")
+
+    # getting inputs for name, hours and pay rate
+    detailList.append(validString(input("Enter Employee Name: ")))
+    detailList.append(validInt(input("Enter Hours Worked: ")))
+    detailList.append(validFloat(input("Enter Rate of Pay: ")))
+
+    detailList.append(bonusCheck(detailList[1]))
+    detailList.append(grossCalcs(detailList[2], detailList[1]))
+    detailList.append(taxCalcs(detailList[3], rateOfTax))
+    detailList.append(netCalcs(detailList[4], detailList[5], detailList[3]))
+
+    # passing the list to the print function
+    printWages(detailList)
+
+# prints closing message
+endMSG()
