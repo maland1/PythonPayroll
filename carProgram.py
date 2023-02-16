@@ -1,8 +1,11 @@
 # importing generic functions from file
 import functions as fnc
 
-# setting up delivery charge variable for ease of changing
+# set variables
 delivCharge = 0.05
+filePath = "C:\\temp\\Opel.txt"
+# setting up list for print function
+opelList = []
 
 
 # does the delivery cost calcs
@@ -21,16 +24,22 @@ def salesCalcs(cost, delivery, profitMarg):
 
 
 # prints calculations to console
-def printCalc(value):
-    print("\nCar Make:\t{}".format(value[0]))
-    print("\nCar Model:\t{}".format(value[1]))
-    print("\nCost Price:\t{}".format(value[2]))
-    print("\nDelivery Charge:\t{}".format(value[4]))
-    print("\nProfit Margin:\t{}".format(value[5]))
-    print("\nSale Price:\t{}".format(value[6]))
+def printCalc(pValue):
+    print("\nCar Make:\t{}".format(pValue[0]))
+    print("Car Model:\t{}".format(pValue[1]))
+    print("Cost Price:\t{}".format(pValue[2]))
+    print("Delivery Charge:\t{}".format(pValue[4]))
+    print("Profit Margin:\t{}".format(pValue[5]))
+    print("Sales Price:\t{}".format(pValue[6]))
 
-# setting up list for print function
-opelList = []
+
+def textPrint(path, pValue):
+        with open(path, "a") as file:
+            s = "-------------"
+            file.write("\n{:<18}{:<18}{:<18}{:<18}{:<18}{:<18}\n".format("Car Make", "Car Model", "Cost Price", "Delivery Charge", "Profit Margin", "Sales Price"))
+            file.write("\n{:<18}{:<18}{:<18}{:<18}{:<18}{:<18}\n".format(s, s, s, s, s, s))
+            file.write("{:<18}{:<18}{:<18,.2f}{:<18,.2f}{:<18,.2f}{:<18,.2f}\n".format(pValue[0], pValue[1], pValue[2], pValue[4], pValue[5], pValue[6]))
+
 
 # getting user inputs
 def inputDetails():
@@ -60,6 +69,9 @@ inputDetails()
 
 # printing values to screen
 printCalc(opelList)
+# printing data to txt file and displaying confirmation
+textPrint(filePath, opelList)
+fnc.confirmation(filePath)
 
 # calls the closing message function
 fnc.endMSG()

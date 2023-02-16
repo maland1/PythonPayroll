@@ -8,6 +8,10 @@ def endMSG():
     print("\nThank you for using Soft Ireland!")
 
 
+def confirmation(filePath):
+    print("\nData has been written to " + filePath)
+
+
 # function to validate strings
 def validString(userInput):
     while True:
@@ -18,18 +22,21 @@ def validString(userInput):
                 raise Exception
         except:
             print("Invalid entry, please enter a valid string.")
+            userInput = input("Please try again: ")
 
 
 # function to validate integers
-def validInt(userInput):
+def validInt(userInput, maxVal=0):
     while True:
         try:
-            if int(userInput) < 1:
+            # checks if maxval is less than the given input - which will then throw an error
+            if int(userInput) < 1 or (0 < maxVal < int(userInput)):
                 raise Exception
             else:
                 return int(userInput)
         except:
             print("Invalid entry, please provide a valid integer.")
+            userInput = input("Please try again: ")
 
 
 # function to validate floats
@@ -42,3 +49,4 @@ def validFloat(userInput):
                 return float(userInput)
         except:
             print("Invalid entry, please provide a valid float.")
+            userInput = input("Please try again: ")
