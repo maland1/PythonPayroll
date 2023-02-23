@@ -85,22 +85,11 @@ def empView():
             print(f"Error occurred: {str(err)}")
             continue
 
-        while True:
-            contChoice = input("\nDo you wish to view another employee's records? (y/n) ").lower()
-            # sends user back to main menu
-            if contChoice == "n":
-                menuDisplay()
-                return
-            # kicks user back to empID choice
-            elif contChoice == "y":
-                break
-            # error handling & keeps user here until correct entry
-            else:
-                print("Invalid input. Please enter (y/n) ")
-                continue
+        # continuous loop until user exits
+        continueEntry()
 
 
-# Adding new employee function
+# adding new employee function
 def empAdd():
     while True:
         try:
@@ -126,19 +115,8 @@ def empAdd():
         except Exception as err:
             print(f"Error occurred: {str(err)}")
 
-        while True:
-            contChoice = input("\nDo you wish to add another employee? (y/n) ").lower()
-            # sends user back to main menu
-            if contChoice == "n":
-                menuDisplay()
-                return
-            # kicks user back to details input
-            elif contChoice == "y":
-                break
-            # error handling & keeps user here until correct entry
-            else:
-                print("Invalid input. Please enter (y/n) ")
-                continue
+        # continuous loop until user exits
+        continueEntry()
 
 
 # editing existing records function
@@ -174,19 +152,7 @@ def empEdit():
             print(f"Error occurred: {str(err)}")
 
         # continuous loop until user exits
-        while True:
-            contChoice = input("\nDo you wish to add another employee? (y/n) ").lower()
-            # sends user back to main menu
-            if contChoice == "n":
-                menuDisplay()
-                return
-            # kicks user back to details input
-            elif contChoice == "y":
-                break
-            # error handling & keeps user here until correct entry
-            else:
-                print("Invalid input. Please enter (y/n) ")
-                continue
+        continueEntry()
 
 # deleting existing records function
 def empDelete():
@@ -215,9 +181,33 @@ def empDelete():
 
 # employee payroll data function
 def empPayrollDetails():
-    # TODO: Sort out payroll
+    # TODO: Fix SQL query - need to be on PC
     while True:
+        userChoice = fnc.validInt(input("\nPlease enter Employee ID: "))
         try:
+            if findRecord(userChoice):
+                locHours = fnc.validInt(input("Enter the Hours Worked: "))
+                locPayRate = fnc.validInt(input("Enter the Rate of Pay: "))
+                locTaxRate = fnc.validInt(input("Enter the Rate of Tax: "))
+                locDate = fnc.currentDate()
+
+                payrollQuery = "INSERT INTO payroll()"
+                print("Details for Employee have been written to database.")
+
+                while True:
+                    contChoice = input("\nDo you wish to print a payslip? (y/n) ").lower()
+                    # sends user back to main menu
+                    if contChoice == "n":
+                        continueEntry()
+                    # kicks user back to details input
+                    elif contChoice == "y":
+
+                        ### payslip code here
+                        break
+                    # error handling & keeps user here until correct entry
+                    else:
+                        print("Invalid input. Please enter (y/n) ")
+                        continue
             pass
         except Exception as err:
             print(f"Error occurred: {str(err)}")
@@ -227,8 +217,9 @@ def empPayrollDetails():
 # printing payroll data function
 def empSummaryReport():
     # TODO: Report formatting and setup
-    while True:
+        filePath = "C\\temp\\Employees.txt"
         try:
+
             pass
         except Exception as err:
             print(f"Error occurred: {str(err)}")
@@ -252,6 +243,7 @@ def empExcelExport():
             print(f"Error occurred: {str(err)}")
 
 
+# function for looping options
 def continueEntry():
     while True:
         contChoice = input("\nDo you wish to continue? (y/n) ").lower()
@@ -267,7 +259,7 @@ def continueEntry():
             print("Invalid input. Please enter (y/n) ")
             continue
 
-# this function solely checks whether a record exists for a specific empID
+# function for checking if record exists
 def findRecord(id):
     # setting up and firing SQL query to find employee
     findQuery = "SELECT empID FROM employee WHERE empID = '" + str(id) + "';"

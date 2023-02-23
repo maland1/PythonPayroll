@@ -69,3 +69,8 @@ def validDate(userInput):
         except ValueError:
             print("Invalid date format. Enter in the format (YYYY-MM-DD).")
             userInput = input("Please try again: ")
+
+
+def currentDate():
+    date = dTime.today()
+    return date
