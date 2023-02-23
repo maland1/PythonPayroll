@@ -1,3 +1,6 @@
+from datetime import datetime as dTime
+
+
 # function to print generic welcome message
 def startMSG():
     print("\nWelcome to Soft Ireland software package.")
@@ -20,6 +23,7 @@ def validString(userInput):
                 return userInput
             else:
                 raise Exception
+
         except:
             print("Invalid entry, please enter a valid string.")
             userInput = input("Please try again: ")
@@ -34,6 +38,7 @@ def validInt(userInput, maxVal=0):
                 raise Exception
             else:
                 return int(userInput)
+
         except:
             print("Invalid entry, please provide a valid integer.")
             userInput = input("Please try again: ")
@@ -47,6 +52,20 @@ def validFloat(userInput):
                 raise Exception
             else:
                 return float(userInput)
+
         except:
             print("Invalid entry, please provide a valid float.")
+            userInput = input("Please try again: ")
+
+
+# validating date inputs in the correct format
+def validDate(userInput):
+    while True:
+        try:
+            # setting up the code to validate whether an input is in the correct format
+            properDate = dTime.strptime(userInput, '%Y-%m-%d').date()
+            return properDate
+
+        except ValueError:
+            print("Invalid date format. Enter in the format (YYYY-MM-DD).")
             userInput = input("Please try again: ")

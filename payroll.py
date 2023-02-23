@@ -41,15 +41,15 @@ def getInput():
             case 4:
                 empDelete()
             case 5:
-                payrollDetails()
+                empPayroll()
             case 6:
-                printReport()
+                empReport()
             case 7:
                 fnc.endMSG()
                 exit()
 
 
-# function
+# viewing existing records function
 def empView():
     while True:
         # gets user input for empID and sets up the SQL query
@@ -94,23 +94,80 @@ def empView():
                 continue
 
 
+# Adding new employee function
 def empAdd():
-    pass
+    while True:
+        try:
+            print("Enter Employee Details: \n")
+            # gets user input for new employee information
+            locFirstName = fnc.validString(input("Enter Employee First Name: "))
+            locSurname = fnc.validString(input("Enter Employee Surname: "))
+            locAddress = fnc.validString(input("Enter Employee Address: "))
+            locEmail = fnc.validString(input("Enter Employee Email: "))
+            locMobile = fnc.validString(input("Enter Employee Mobile: "))
+            locStartDate = fnc.validDate(input("Enter Employee Start Date: "))
+            locEndDate = fnc.validDate(input("Enter Employee End Date: "))
+
+            # building SQL query + using tuples for parameters
+            addQuery = "INSERT INTO employee(firstName, surname, address, email, mobile, startDate, endDate) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+            addArray = (locFirstName, locSurname, locAddress, locEmail, locMobile, locStartDate, locEndDate)
+
+            # executing SQL query and committing the changes to the DB
+            dbCursor.execute(addQuery, addArray)
+            db.commit()
+            print("\nEmployee details added to database.")
+
+        except Exception as err:
+            print(f"Error occurred: {str(err)}")
+
+        while True:
+            contChoice = input("\nDo you wish to add another employee? (y/n) ").lower()
+            # sends user back to main menu
+            if contChoice == "n":
+                menuDisplay()
+                return
+            # kicks user back to details input
+            elif contChoice == "y":
+                break
+            # error handling & keeps user here until correct entry
+            else:
+                print("Invalid input. Please enter (y/n) ")
+                continue
+        pass
 
 
+# editing existing records function
 def empEdit():
+    # TODO: "UPDATE" SQL query and continuous loop
     pass
 
 
+# deleting existing records function
 def empDelete():
+    while True:
+        # gets user input for empID and sets up the SQL query
+        userChoice = fnc.validInt(input("\nPlease enter Employee ID: "))
+        delQuery = "DELETE FROM employee WHERE empID ="
+
+        try:
+            # Firing SQL query and deleting relevant records
+            dbCursor.execute(delQuery + str(userChoice))
+            db.commit()
+
+        except Exception as err:
+            print(f"Error occurred: {str(err)}")
     pass
 
 
-def payrollDetails():
+# employee payroll data function
+def empPayroll():
+    # TODO: Sort out payroll
     pass
 
 
-def printReport():
+# printing payroll data function
+def empReport():
+    # TODO: Report formatting and setup
     pass
 
 # initialising the program
