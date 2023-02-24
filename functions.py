@@ -71,6 +71,9 @@ def validDate(userInput):
             userInput = input("Please try again: ")
 
 
+# returns current date
 def currentDate():
-    date = dTime.today()
+    # chops out the TIME part of the DATETIME returned
+    now = dTime.now()
+    date = now.date()
     return date
