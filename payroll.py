@@ -49,11 +49,11 @@ def getInput():
             case 5:
                 empPayrollDetails()  # complete
             case 6:
-                empSummaryReport()  #
+                empSummaryReport()  # complete
             case 7:
-                empPayrollReport()  #
+                empPayrollReport()  # complete
             case 8:
-                empExcelExport()  #
+                empExcelExport()  # complete
             case 9:
                 fnc.endMSG()  # complete
                 db.close()
@@ -205,6 +205,7 @@ def empDelete():
         # gets user input for empID and sets up the SQL query
         userChoice = fnc.validInt(input("\nPlease enter Employee ID: "))
         delQuery = "DELETE FROM employee WHERE empID ="
+        payrollDelQuery = "DELETE FROM payroll WHERE empID ="
 
         try:
             # Firing SQL query and deleting relevant records
@@ -215,6 +216,10 @@ def empDelete():
                 elif userCheck == "y":
                     dbCursor.execute(delQuery + str(userChoice))
                     db.commit()
+                    dbCursor.execute(payrollDelQuery + str(userChoice))
+                    db.commit
+
+                    print("Employee ID {} and all associated records have been deleted.".format(userChoice))
                 else:
                     print("Invalid input. Please enter (y/n) ")
                     continue
