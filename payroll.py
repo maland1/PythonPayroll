@@ -1,14 +1,15 @@
-# importing SQL connector
+# importing SQL connector, csv and generic functions
+import csv
 import mysql.connector as sqlConn
 import functions as fnc
 
-# defining filepaths
+# defining base filepath
 filePath = "C:\\temp\\"
 
 # database login details
 db = sqlConn.connect(
     host="localhost",
-    user="root",  # TODO: change user/pass to "root"
+    user="root",  # ensure user/pass are "root" (doesn't work with that login on my machine) user="user", passwd="easy2guess",
     passwd="root",
     database="mydb"
 )
@@ -309,9 +310,9 @@ def empPayrollDetails():
 
 # printing payroll data function
 def empSummaryReport():
-    fileName = "Employees.txt"
-    fullFile = "{}{}".format(filePath, fileName)
-    with open(fullFile, "w") as file:
+    summaryName = "Employees.txt"
+    fullSummary = "{}{}".format(filePath, summaryName)
+    with open(fullSummary, "w") as file:
         try:
             # initial formatting of file and headings
             tab = "============"
@@ -339,6 +340,21 @@ def empSummaryReport():
             print(f"Error occurred: {str(err)}")
 
 
+def grossCalc(hrs, pay):
+    gross = hrs * pay
+    return gross
+
+
+def taxCalc(gross, taxR):
+    taxPaid = gross * (taxR / 100)
+    return taxPaid
+
+
+def netCalc(gross, tax):
+    netPay = gross - tax
+    return netPay
+
+
 # exporting data to a report format
 def empPayrollReport():
     while True:
@@ -355,17 +371,45 @@ def empPayrollReport():
                         return
                     # starts payroll function
                     elif contChoice == "y":
-
+                        # fetching data for the heading section
                         headerQuery = "SELECT empID, firstName, surname FROM employee where empID ="
+                        dbCursor.execute(headerQuery + str(userChoice))
+                        headerList = dbCursor.fetchone()
+
+                        # fetching data for the body section
                         bodyQuery = "SELECT * FROM payroll where empID ="
+                        dbCursor.execute(bodyQuery + str(userChoice))
+                        payDataList = dbCursor.fetchall()
 
-                        print(bodyQuery)
+                        # defining the head and body formatting
+                        header = "\tEmployee ID: {:<16} || First Name: {:<12} || Last Name: {:<12}\n".format(headerList[0], headerList[1], headerList[2])
+                        body = "{:<14} || {:<14} || {:<14} || {:<14} || {:<14} || {:<14} || {:<14}".format("Hours Worked", "Rate of Pay", "Gross Pay", "Tax Rate", "Tax Paid", "Nett Pay", "Date")
+
                         fileName = "Payroll Report - "
-                        fullFile = "{}{}{}.txt".format(filePath, fileName, list[0] + list[1])
-                        with open (fullFile, "w") as file:
-                            # TODO: sort out formatting and list - also need to format query to call all relevant data
+                        fullFile = "{}{}{}.txt".format(filePath, fileName, headerList[1] + " " + headerList[2])
+                        with open(fullFile, "w") as file:
+                            # writing header and body to file
+                            file.write(header)
+                            file.write("~" * 118 + "\n")
 
-                            pass
+                            file.write(body + "\n")
+                            file.write("~" * 118 + "\n")
+
+                            for data in payDataList:
+                                tempGross = grossCalc(data[2], data[3])
+                                tempTax = taxCalc(tempGross, data[4])
+                                tempNet = netCalc(tempGross, tempTax)
+                                date = str(data[5])
+
+                                # Formats the row to align with the body headings
+                                row = "{:<14} || {:<14} || {:<14.2f} || {:<14.2f} || {:<14.2f} || {:<14.2f} || {:<14}".format(
+                                     data[2], data[3], tempGross, data[4], tempTax, tempNet, date)
+
+                                # For each row, write the formatted row and end with a new line
+                                file.write(row + "\n")
+
+                        print("\nSuccessfully created payroll report at {}".format(fullFile))
+
                     # error handling & keeps user here until correct entry
                     else:
                         print("Invalid input. Please enter (y/n) ")
@@ -378,10 +422,23 @@ def empPayrollReport():
 
 # exporting data to Excel
 def empExcelExport():
-    while True:
+    excelName = "payroll.csv"
+    fullExcel = "{}{}".format(filePath, excelName)
+    with open(fullExcel, "w", newline="") as file:
         try:
-            excelQuery = "SELECT employee.firstName, employee.surname, employee.empID, payroll.rateOfPay, payroll.taxRate FROM employee JOIN payroll ON employee.empID = payroll.empID;"
-            pass
+
+            # formatting the CSV export query and firing it
+            excelQuery = "SELECT * FROM mydb.employee, mydb.payroll WHERE employee.empID = payroll.empID ORDER BY payroll.empID;"
+            dbCursor.execute(excelQuery)
+            excelResult = dbCursor.fetchall()
+
+            # defines and writes every row to the file
+            writer = csv.writer(file)
+            for row in excelResult:
+                writer.writerow(row)
+
+            print("\nData exported to CSV file in the directory {}".format(fullExcel))
+
         except Exception as err:
             print(f"Error occurred: {str(err)}")
 
@@ -415,7 +472,7 @@ def findRecord(id):
             print(f"End Date:\t" + str(row[6]))
 
         # ensuring it does not get stuck in a loop
-        return True
+        return resultList
 
 
 # printing to text file
